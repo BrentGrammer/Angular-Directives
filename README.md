@@ -1,6 +1,8 @@
 # Angular app exploring Directives following course by Maximilian Schwarzmueller on Udemy
 
-## Topics co
+## Topics covered:
+
+### Custom Directives:
 
 1. create a new folder in the app/ directory of the project named after the directive to create
    Ex: app/directive-name/
@@ -21,11 +23,12 @@
       *   that appBasicHighlight attribute without square brackets will be recognized in the template)
       *    common convention is to prepend the name with `app`
       */
-
+      ```
       @Directive({
         selector: "[appBasicHighlight]"
       })
       export class BasicHighlightDirective {}
+      ```
 
 4. Access the ref to the element the directive is applied to - Angular allows you to access the injected element ref
    in the constructor as an automatically passed in argument (you can name it whatever, but its type must be
@@ -35,28 +38,33 @@
 
    Ex:
 
+   ```
    export class BasicHighlightDirective {
    constructor(private elementRef: ElementRef) {}
    }
+   ```
 
 5. Do something with the element ref (best place is in the onInit lifecycle method):
    -access the nativeElement prop on the passed in element ref assigned to a property
 
    Ex:
 
+   ```
    export class BasicHighlightDirective implements OnInit {
-   constructor(private elementRef: ElementRef) {}
+    constructor(private elementRef: ElementRef) {}
 
-   ngOnInit() {
-   this.elementRef.nativeElement.style.backgroundColor = "green";
+    ngOnInit() {
+      this.elementRef.nativeElement.style.backgroundColor = "green";
+    }
    }
-   }
+   ```
 
 6. Inform Angular about your directive in app.module.ts - add it to the declarations:
 
 
     Ex in app.module.ts:
 
+      ```
       ...imports
       import { BasicHighlightDirective } from './basic-highlight/basic-highlight.directive';
 
@@ -66,11 +74,10 @@
           BasicHighlightDirective
         ],
         ...})
+        ```
 
     7) In the html template, add the directive by using the label specified in the selector prop of the @Directive
        decorator (without sq brackets) as an attribute to the element:
 
     Ex:
-      <p appBasicHighlight>Style me</p>vered:
-
-### Custom Directives:
+      `<p appBasicHighlight>Style me</p>`
