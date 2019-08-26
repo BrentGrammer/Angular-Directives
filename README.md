@@ -4,6 +4,9 @@
 
 ### Custom Directives:
 
+- Generate a Directive with:
+  `$ ng g d directive-name`
+
 1. create a new folder in the app/ directory of the project named after the directive to create
    Ex: app/directive-name/
 
@@ -42,6 +45,25 @@
    export class BasicHighlightDirective {
    constructor(private elementRef: ElementRef) {}
    }
+   ```
+
+   ### NOTE: It is BAD PRACTICE to access and manipulat the ref directly in the class.
+
+   \*\*It is better to use the passed in renderer from Angular - access in the constructor with type Renderer2
+
+   Ex:
+
+   ```
+     { Directive, OnInit, Renderer2 } from "@angular/core";
+
+     @Directive({
+       selector: "[appBetterHighlight]"
+     })
+     export class BetterHighlightDirective implements OnInit {
+       constructor(renderer: Renderer2) {}
+
+       ngOnInit() {}
+     }
    ```
 
 5. Do something with the element ref (best place is in the onInit lifecycle method):
