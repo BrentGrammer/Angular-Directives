@@ -1,27 +1,76 @@
-# MyFirstApp
+# Angular app exploring Directives following course by Maximilian Schwarzmueller on Udemy
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.0.0.
+## Topics co
 
-## Development server
+1. create a new folder in the app/ directory of the project named after the directive to create
+   Ex: app/directive-name/
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+2. create a directive file in the directory:
+   Ex: app/directive-name/directive-name.directive.ts
 
-## Code scaffolding
+3. create a class that is wrapped in a @Directive attribute and export the class as a named export:
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
-## Build
+    Ex:
+      import { Directive } from "@angular/core";
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+      /**
+      * Pass in a config object:
+      *  -needs a unique selector in camelCase (i.e. it's label used in the html template) wrapped in sqaure brackets
+      *   (this means
+      *   that appBasicHighlight attribute without square brackets will be recognized in the template)
+      *    common convention is to prepend the name with `app`
+      */
 
-## Running unit tests
+      @Directive({
+        selector: "[appBasicHighlight]"
+      })
+      export class BasicHighlightDirective {}
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+4. Access the ref to the element the directive is applied to - Angular allows you to access the injected element ref
+   in the constructor as an automatically passed in argument (you can name it whatever, but its type must be
+   ElementRef).
+   You need to assign the value to a property on the class (either explicitly or implicitly by adding an access
+   modifier in front of the argument):
 
-## Running end-to-end tests
+   Ex:
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+   export class BasicHighlightDirective {
+   constructor(private elementRef: ElementRef) {}
+   }
 
-## Further help
+5. Do something with the element ref (best place is in the onInit lifecycle method):
+   -access the nativeElement prop on the passed in element ref assigned to a property
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+   Ex:
+
+   export class BasicHighlightDirective implements OnInit {
+   constructor(private elementRef: ElementRef) {}
+
+   ngOnInit() {
+   this.elementRef.nativeElement.style.backgroundColor = "green";
+   }
+   }
+
+6. Inform Angular about your directive in app.module.ts - add it to the declarations:
+
+
+    Ex in app.module.ts:
+
+      ...imports
+      import { BasicHighlightDirective } from './basic-highlight/basic-highlight.directive';
+
+      @NgModule({
+        declarations: [
+          AppComponent,
+          BasicHighlightDirective
+        ],
+        ...})
+
+    7) In the html template, add the directive by using the label specified in the selector prop of the @Directive
+       decorator (without sq brackets) as an attribute to the element:
+
+    Ex:
+      <p appBasicHighlight>Style me</p>vered:
+
+### Custom Directives:
