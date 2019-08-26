@@ -74,10 +74,10 @@
           BasicHighlightDirective
         ],
         ...})
-        ```
+      ```
 
-    7) In the html template, add the directive by using the label specified in the selector prop of the @Directive
-       decorator (without sq brackets) as an attribute to the element:
+7. In the html template, add the directive by using the label specified in the selector prop of the @Directive
+   decorator (without sq brackets) as an attribute to the element:
 
-    Ex:
-      `<p appBasicHighlight>Style me</p>`
+   Ex:
+   `<p appBasicHighlight>Style me</p>`
