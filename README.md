@@ -115,3 +115,133 @@
 
    Ex:
    `<p appBasicHighlight>Style me</p>`
+
+### Reactive Directives: Targeting events on the element to react to:
+
+- Use the @HostListener decorator in the directive class
+- You can pass in any event that is supported by the element to listen to it and react to it to change style.
+- Add the decorator to some method to execute when the event occurs (the method can receive the event data as an arg)
+
+```
+export class BetterHighlightDirective implements OnInit {
+  // use prop binding to be allow for setting values dynamically:
+  @Input() highlightColor: string = "purple";
+  @Input() defaultColor: string = "blue";
+  // remember to set an initial value to prevent errors:
+  @HostBinding("style.backgroundColor") backgroundColor: string = this
+    .defaultColor;
+
+  constructor(private elementRef: ElementRef, private renderer: Renderer2) {}
+
+  ngOnInit() {
+    this.backgroundColor = this.defaultColor;
+  }
+
+  @HostListener("mouseenter") mouseover(eventData: Event) {
+    this.backgroundColor = this.highlightColor;
+  }
+  @HostListener("mouseleave") mouseleave(eventData: Event) {
+    this.backgroundColor = this.defaultColor;
+  }
+}
+```
+
+### @HOSTBINDING
+
+- You can also use @HostBinding decorator to bind the style property of the host element to a value of a property in your
+  directive class
+
+- Pass in the property of the element (in JavaScript DOM prop format) to the decorator and apply it to a property on
+  your class which you can then set a value to (i.e. in the ngOnInit)
+
+Ex:
+
+```
+export class BetterHighlightDirective implements OnInit {
+
+  // remember to set an initial value to prevent errors:
+  @HostBinding("style.backgroundColor") backgroundColor: string = "blue";
+
+  constructor(private elementRef: ElementRef, private renderer: Renderer2) {}
+
+  // no need to initialize it in onInit
+  ngOnInit() {}
+
+  @HostListener("mouseenter") mouseover(eventData: Event) {
+    this.backgroundColor = "purple";
+  }
+  @HostListener("mouseleave") mouseleave(eventData: Event) {
+    this.backgroundColor = "blue";
+  }
+}
+```
+
+### Making values in the directive dynamic:
+
+- Add property binding with @Input decorator to allow values to be set by the user to use in the directive.
+- on the element in the html template, the user can bind to these to set them for use in the directive
+- In the directive class set values to these properties instead of hard coding them.
+
+Ex:
+
+```
+  export class BetterHighlightDirective implements OnInit {
+
+    // use prop binding to be allow for setting values dynamically:
+    @Input() highlightColor: string = "purple";
+    @Input() defaultColor: string = "blue";
+
+    @HostBinding("style.backgroundColor") backgroundColor: string = this
+      .defaultColor;
+
+    constructor(private elementRef: ElementRef, private renderer: Renderer2) {}
+
+    // set the default in oninit to prevent first render not showing the user set default color
+    ngOnInit() {
+      this.backgroundColor = this.defaultColor
+    }
+
+    @HostListener("mouseenter") mouseover(eventData: Event) {
+      this.backgroundColor = this.highlightColor;
+    }
+    @HostListener("mouseleave") mouseleave(eventData: Event) {
+      this.backgroundColor = this.defaultColor;
+    }
+  }
+
+```
+
+// In the html template:
+`<p appBetterHighlight [defaultColor]="'yellow'" [highlightColor]="'red'">`
+
+NOTE: you can alias a property to set in the directive to the same name as the directive which enables you to set a
+value by enclosing the directive name in square brackets instead of having to add that property on the element in addition
+to having the directive name (not in square brackets).
+An example of this use case is [ngClass] which is a directive that allows the setting of a property aliased to the same
+name.
+
+Ex:
+
+```
+export class BetterHighlightDirective implements OnInit {
+
+      // use prop binding to be allow for setting values dynamically:
+      @Input('appBetterHighlight') highlightColor: string = "purple";
+
+      ...
+```
+
+      // Now in the html template:
+      `<p [appBetterHighlight]="'yellow'">text</p>`
+
+#### NOTE: If you are just passing a string in a bound prop, you can remove the square brackets and just have one set
+
+of quotes:
+
+Ex:
+`<p [myprop]="'string'">`
+
+becomes
+
+`<p myprop="string">`
+// works the same without sq brackets
