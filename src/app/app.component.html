@@ -6,24 +6,19 @@
       </button>
       <br /><br />
       <ul class="list-group">
-        <div *ngIf="onlyOdd">
+        <div *appUnless="!onlyOdd">
           <li *ngFor="let number of evenNumbers" class="list-group-item">
             {{ number }}
           </li>
         </div>
-        <div *ngIf="!onlyOdd">
-          <li *ngFor="let number of oddNumbers" class="list-group-item">
-            {{ number }}
-          </li>
-        </div>
       </ul>
-      <ng-template [ngIf]="onlyOdd">
-        <p>Only odd</p>
-      </ng-template>
-      <p appBasicHighlight>Style me</p>
-      <p appBetterHighlight defaultColor="yellow" [highlightColor]="'red'">
-        Style me
-      </p>
+
+      <div>
+        <p appBasicHighlight>Style me</p>
+        <p appBetterHighlight defaultColor="yellow" [highlightColor]="'red'">
+          Style me
+        </p>
+      </div>
     </div>
   </div>
 </div>

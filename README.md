@@ -245,3 +245,60 @@ becomes
 
 `<p myprop="string">`
 // works the same without sq brackets
+
+## STRUCTURAL DIRECTIVES:
+
+- Behind the scenes Angular transforms structural directives with `*` to an ng-template block
+- an ng-template element is provided by Angular and is not rendered to the DOM - it is a container for elements that
+  will be conditionally rendered by Angular.
+
+```
+<ng-template [ngIf]="my condition here">
+  <elements...>
+</ng-template>
+```
+
+same as:
+
+```
+<elements... *ngIf="my condition here">
+```
+
+CREATING STRUCTURAL DIRECTIVE:
+
+- `$ ng g d directive-name`
+
+- Use @Input on a property that has a setter method accepting a user inputted value.
+- In the setter method, access the ViewContainerRef and TemplateRef passed into the constructor by Angular.
+
+Ex:
+
+```
+export class UnlessDirective {
+  // using `set` turns the property into a setter method which will run everytime the property changes
+  // NOTE: Make sure to name the property the same as the directive so you can set it on the element in the html template
+  @Input() set appUnless(condition: boolean) {
+    if (!condition) {
+      // add the underlying ng-template to the DOM
+      this.vcRef.createEmbeddedView(this.templateRef);
+    } else {
+      // remove everything from the place in the DOM specified by the ViewContianerRef:
+      this.vcRef.clear();
+    }
+  }
+
+  /* get access to the ng-template (under the hood Angular creates this and this is where the structural directive sits)
+    TemplateRef takes a generic type
+
+    get access to where in the html template to render (use the ViewContainerRef).
+    ViewContainerRef marks the place in the document thedirective is being used.
+  */
+  constructor(
+    private templateRef: TemplateRef<any>,
+    private vcRef: ViewContainerRef
+  ) {}
+}
+```
+
+- In the html template to use it:
+  `<div *appUnless="!onlyOdd">`
