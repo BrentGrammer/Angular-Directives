@@ -302,3 +302,25 @@ export class UnlessDirective {
 
 - In the html template to use it:
   `<div *appUnless="!onlyOdd">`
+
+### ngSwitch:
+
+// In app-component html template:
+
+```
+ <div [ngSwitch]="value">
+  <p *ngSwitchCase="5">Value is 5</p>
+  <p *ngSwitchCase="10">Value is 10</p>
+  <p *ngSwitchDefault>Value is default</p>
+</div>
+```
+
+In the ts file:
+
+```
+export class AppComponent {
+  value = 10;
+}
+```
+
+// will show 10 in the DOM
