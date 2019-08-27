@@ -7,6 +7,11 @@ import { Directive, ElementRef, OnInit } from "@angular/core";
  *   It tells Angular to access this as an attribute on an element.
  *    common convention is to prepend the name with `app`
  */
+
+/**
+ * NOTE: This is bad practice to manipulate the element directly - it is better to use the Angular renderer which is
+ * done in the better-directive.directive.ts file.
+ */
 @Directive({
   selector: "[appBasicHighlight]"
 })

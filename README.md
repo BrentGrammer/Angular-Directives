@@ -33,55 +33,67 @@
       export class BasicHighlightDirective {}
       ```
 
-4. Access the ref to the element the directive is applied to - Angular allows you to access the injected element ref
-   in the constructor as an automatically passed in argument (you can name it whatever, but its type must be
-   ElementRef).
-   You need to assign the value to a property on the class (either explicitly or implicitly by adding an access
-   modifier in front of the argument):
+4.  Access the ref to the element the directive is applied to - Angular allows you to access the injected element ref
+    in the constructor as an automatically passed in argument (you can name it whatever, but its type must be
+    ElementRef).
+    You need to assign the value to a property on the class (either explicitly or implicitly by adding an access
+    modifier in front of the argument):
 
-   Ex:
+    Ex:
 
-   ```
-   export class BasicHighlightDirective {
-   constructor(private elementRef: ElementRef) {}
-   }
-   ```
-
-   ### NOTE: It is BAD PRACTICE to access and manipulat the ref directly in the class.
-
-   \*\*It is better to use the passed in renderer from Angular - access in the constructor with type Renderer2
-
-   Ex:
-
-   ```
-     { Directive, OnInit, Renderer2 } from "@angular/core";
-
-     @Directive({
-       selector: "[appBetterHighlight]"
-     })
-     export class BetterHighlightDirective implements OnInit {
-       constructor(renderer: Renderer2) {}
-
-       ngOnInit() {}
-     }
-   ```
-
-5. Do something with the element ref (best place is in the onInit lifecycle method):
-   -access the nativeElement prop on the passed in element ref assigned to a property
-
-   Ex:
-
-   ```
-   export class BasicHighlightDirective implements OnInit {
-    constructor(private elementRef: ElementRef) {}
-
-    ngOnInit() {
-      this.elementRef.nativeElement.style.backgroundColor = "green";
+    ```
+    export class BasicHighlightDirective {
+       constructor(private elementRef: ElementRef) {}
     }
-   }
-   ```
+    ```
 
-6. Inform Angular about your directive in app.module.ts - add it to the declarations:
+### NOTE: It is BAD PRACTICE to access and manipulat the ref directly in the class.
+
+    **It is better to use the passed in renderer from Angular - access in the constructor with type Renderer2
+
+    Ex:
+
+    - Pass in the Angular provided ElementRef arg and renderer to the constructor and use setStyle in the
+      ngOnInit method.
+    - in the setStyle method, make sure to access the nativeElement to set the style on
+
+    ```
+      { Directive, OnInit, Renderer2, ElementRef } from "@angular/core";
+
+      @Directive({
+        selector: "[appBetterHighlight]"
+      })
+      export class BetterHighlightDirective implements OnInit {
+        constructor(elementRef: ElementRef, renderer: Renderer2) {}
+
+        ngOnInit() {
+          renderer.setStyle(this.elementRef.nativeElement, 'background-color', 'blue')
+        }
+      }
+    ```
+
+         Renderer2 docs: https://angular.io/api/core/Renderer2
+
+    ```
+
+    ```
+
+5.  Do something with the element ref (best place is in the onInit lifecycle method):
+    -access the nativeElement prop on the passed in element ref assigned to a property
+
+    Ex:
+
+    ```
+    export class BasicHighlightDirective implements OnInit {
+     constructor(private elementRef: ElementRef) {}
+
+     ngOnInit() {
+       this.elementRef.nativeElement.style.backgroundColor = "green";
+     }
+    }
+    ```
+
+6.  Inform Angular about your directive in app.module.ts - add it to the declarations:
 
 
     Ex in app.module.ts:
